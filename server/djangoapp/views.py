@@ -92,14 +92,15 @@ def registration_request(request):
 
 # Update the `get_dealerships` view to render the index page with a list of dealerships
 def get_dealerships(request):
+    context = {}
     if request.method == "GET":
         url = "https://us-south.functions.appdomain.cloud/api/v1/web/b50646e9-2c3e-4749-b4a4-e8141077a996/dealership-package/get-dealership"
         # Get dealers from the URL
         dealerships = get_dealers_from_cf(url)
+        context = {"dealership_list" : dealerships}
         # Concat all dealer's short name
-        dealer_names = ' '.join([dealer.short_name for dealer in dealerships])
         # Return a list of dealer short name
-        return HttpResponse(dealer_names)
+        return render(request, 'djangoapp/index.html', context)
 
 def get_dealer_details(request, dealer_id):
     context = {}
@@ -109,9 +110,10 @@ def get_dealer_details(request, dealer_id):
         context = {
             "reviews":  reviews, 
             "dealerId": dealer_id
+
         }
 
-        return HttpResponse(reviews)
+        return render(request, 'djangoapp/dealer_details.html', context)
 
 def add_review(request, dealer_id):
     # User must be logged in before posting a review
@@ -143,7 +145,7 @@ def add_review(request, dealer_id):
             else: 
                 review["purchase_date"] = None
 
-            url = "https://9bebcb01.eu-de.apigw.appdomain.cloud/api/review"  # API Cloud Function route
+            url = " https://us-south.functions.appdomain.cloud/api/v1/web/b50646e9-2c3e-4749-b4a4-e8141077a996/dealership-package/post-review"  # API Cloud Function route
             json_payload = {"review": review}  # Create a JSON payload that contains the review data
 
             # Performing a POST request with the review

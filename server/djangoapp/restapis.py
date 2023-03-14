@@ -37,11 +37,11 @@ def get_dealer_by_id(url, dealer_id):
     json_result = get_request(url, dealerId=dealer_id)
 
     # Create a CarDealer object from response
-    dealer = json_result["entries"][0]
+    dealer = json_result["body"][0]
     dealer_obj = CarDealer(address=dealer["address"], city=dealer["city"], full_name=dealer["full_name"],
                            id=dealer["id"], lat=dealer["lat"], long=dealer["long"],
                            short_name=dealer["short_name"],
-                           st=dealer["st"], state=dealer["state"], zip=dealer["zip"])
+                           st=dealer["st"],  zip=dealer["zip"])
 
     return dealer_obj
     
@@ -149,16 +149,6 @@ def post_request(url, json_payload, **kwargs):
 # Create a `post_request` to make HTTP POST requests
 # e.g., response = requests.post(url, params=kwargs, json=payload)
 
-def post_request(url, json_payload, **kwargs):
-    print(f"POST to {url}")
-    try:
-        response = requests.post(url, params=kwargs, json=json_payload)
-    except:
-        print("An error occurred while making POST request. ")
-    status_code = response.status_code
-    print(f"With status {status_code}")
-
-    return 
 
 
 # Create a get_dealers_from_cf method to get dealers from a cloud function
